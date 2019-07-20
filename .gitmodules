@@ -1,0 +1,3 @@
+[submodule "btmonitor-ui"]
+	path = btmonitor-ui
+	url = git@github.com:uudisaru/btmonitor-ui.git

@@ -20,11 +20,13 @@ import msgpack
 logger = logging.getLogger(__name__)
 
 app = Sanic(__name__)
+app.static('/', './frontend/index.html')
+app.static('/', './frontend')
 hub = Hub(True)
 USERS = set()
 
 
-@app.route('/')
+@app.route('/clients')
 @authorized(app.config)
 async def test(request):
     return response.json({'clients': len(USERS)})
