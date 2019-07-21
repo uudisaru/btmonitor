@@ -1,0 +1,10 @@
+FROM node:12.6 as build-deps
+
+COPY btmonitor-ui/ /usr/src/app/
+
+WORKDIR /usr/src/app
+
+RUN yarn
+RUN [ "yarn", "build" ]
+
+CMD cp -r build/* frontend/

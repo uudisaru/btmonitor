@@ -1,0 +1,6 @@
+aiohttp~=3.5.4
+click>=7.0,==7.*
+uvloop~=0.12.2
+msgpack~=0.6.1
+pyjwt~=1.7.1
+cryptography>=2.7,<3.0

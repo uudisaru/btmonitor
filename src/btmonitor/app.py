@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """Main module."""
+from pathlib import Path
+
 from btmonitor.auth.decorators import authorized
 from btmonitor.poller import poll_positions
 from btmonitor.poller.tallinn import parse_schedule
@@ -20,8 +22,6 @@ import msgpack
 logger = logging.getLogger(__name__)
 
 app = Sanic(__name__)
-app.static('/', './frontend/index.html')
-app.static('/', './frontend')
 hub = Hub(True)
 USERS = set()
 
@@ -91,5 +91,17 @@ async def before_server_stop(app, loop):
             task.cancel()
 
 
+def init_ssl(host):
+    p = Path(f'/etc/letsencrypt/live/{host}')
+    cert = p / 'fullchain.pem'
+    ssl = None
+    if cert.exists():
+        ssl = {'cert': str(cert), 'key': str(p / 'privkey.pem')}
+    return ssl
+
+
 def run(host, port):
-    app.run(host=host, port=port)
+    ssl = init_ssl(host)
+    app.static('/', './frontend/index.html')
+    app.static('/', './frontend')
+    app.run(host=host, port=port, ssl=ssl)
