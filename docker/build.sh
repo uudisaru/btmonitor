@@ -29,10 +29,15 @@ if [[ ! -d "../frontend" ]]; then
     cd docker
 fi
 
-# Fetch letsencrypt certificate
-echo -n "Host for the certificate:"
-read host
+if [[ ! -f "./servername.txt" ]]; then
+    echo -n "Host for the certificate:"
+    read host
+    echo $host > ./servername.txt
+else
+    host=$(cat "./servername.txt")
+fi
 
+# Fetch letsencrypt certificate
 if [[ ! -d "./letsencrypt" ]]; then
     mkdir -p ./letsencrypt/etc
     mkdir -p ./letsencrypt/lib
