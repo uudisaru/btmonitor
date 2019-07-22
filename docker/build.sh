@@ -38,8 +38,8 @@ if [[ ! -d "./letsencrypt" ]]; then
     mkdir -p ./letsencrypt/lib
 
     docker run -it --rm --name certbot \
-        -v "letsencrypt/etc:/etc/letsencrypt" \
-        -v "letsencrypt/lib:/var/lib/letsencrypt" \
+        -v "$(pwd)/letsencrypt/etc:/etc/letsencrypt" \
+        -v "$(pwd)/letsencrypt/lib:/var/lib/letsencrypt" \
         certbot/certbot \
         certonly --manual --preferred-challenges dns-01 --agree-tos -d "${host}" \
         --server https://acme-v02.api.letsencrypt.org/directory
