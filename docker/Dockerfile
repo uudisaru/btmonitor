@@ -17,4 +17,4 @@ WORKDIR "/usr/src/app/"
 RUN cat req-extra.txt >> requirements.txt
 RUN rm req-extra.txt
 RUN pip3 install -r requirements.txt
-CMD ["sh", "-c", "/btmonitor/main.py server -p 443 -h $server"]
+CMD ["sh", "-c", "./btmonitor/main.py server -p 443 -h $server"]
