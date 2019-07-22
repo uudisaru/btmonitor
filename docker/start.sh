@@ -19,6 +19,6 @@ fi
 docker run -d -p 443:443 \
     -v "$(pwd)/letsencrypt/etc:/etc/letsencrypt" \
     -e "server=${server}" \
-    -e "SANIC_PUBLIC_KEY=\"${verification_key}\"" \
+    -e "SANIC_PUBLIC_KEY=${verification_key}" \
     --restart unless-stopped \
     btmonitor/btmonitor:v1

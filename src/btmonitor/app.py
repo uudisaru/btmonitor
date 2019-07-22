@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
 """Main module."""
-from pathlib import Path
-
 from btmonitor.auth.decorators import authorized
 from btmonitor.poller import poll_positions
 from btmonitor.poller.tallinn import parse_schedule
 from btmonitor.poller.tracker import Tracker
 from btmonitor.pubsub import Hub
 from btmonitor.pubsub import Subscription
+from pathlib import Path
 from sanic import response
 from sanic import Sanic
 from websockets import ConnectionClosed
@@ -94,10 +93,9 @@ async def before_server_stop(app, loop):
 def init_ssl(host):
     p = Path(f'/etc/letsencrypt/live/{host}')
     cert = p / 'fullchain.pem'
-    ssl = None
     if cert.exists():
-        ssl = {'cert': str(cert), 'key': str(p / 'privkey.pem')}
-    return ssl
+        return {'cert': str(cert), 'key': str(p / 'privkey.pem')}
+    return None
 
 
 def run(host, port, cert_name):

@@ -1,4 +1,7 @@
-from btmonitor.app import register, hub, USERS, unregister
+from btmonitor.app import hub
+from btmonitor.app import register
+from btmonitor.app import unregister
+from btmonitor.app import USERS
 
 
 def test_register():

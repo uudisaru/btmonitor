@@ -1,3 +1,4 @@
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from math import floor
 from typing import Dict
 from typing import Union
@@ -8,7 +9,7 @@ import time
 
 def create_token(
     payload: Dict[str, Union[str, int]],
-    private_key: str,
+    private_key: Union[str, RSAPrivateKey],
     algorithm: str = 'RS256',
 ) -> bytes:
     """
