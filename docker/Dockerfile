@@ -1,5 +1,4 @@
 FROM sanicframework/sanic:LTS
-ENV server
 
 RUN apk update \
     && apk add --no-cache openssl-dev libffi-dev
