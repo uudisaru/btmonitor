@@ -46,4 +46,4 @@ if [[ ! -d "./letsencrypt" ]]; then
 fi
 
 export SANIC_PUBLIC_KEY=$(<btmonitor.pub)
-# docker build --build-arg host=${host} -t btmonitor/btmonitor:v1 -f Dockerfile ..
+docker build --build-arg host=${host} -t btmonitor/btmonitor:v1 -f Dockerfile ..
