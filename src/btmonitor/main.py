@@ -16,14 +16,15 @@ def main():
 
 
 @main.command()
-@click.option('-l', '--logging-conf', default='logging.ini')
+@click.option('-c', '--cert-name')
 @click.option('-h', '--host', default='0.0.0.0')
+@click.option('-l', '--logging-conf', default='logging.ini')
 @click.option('-p', '--port', default=8000)
-def server(logging_conf, host, port):
+def server(cert_name, host, logging_conf, port):
     """Start bus traffic monitor"""
     setup_logging(logging_conf)
     logging.info('Starting bus traffic monitor')
-    run(host, port)
+    run(host, port, cert_name)
 
 
 @main.command()

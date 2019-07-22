@@ -100,8 +100,8 @@ def init_ssl(host):
     return ssl
 
 
-def run(host, port):
-    ssl = init_ssl(host)
+def run(host, port, cert_name):
+    ssl = init_ssl(cert_name)
     app.static('/', './frontend/index.html')
     app.static('/', './frontend')
     app.run(host=host, port=port, ssl=ssl)
