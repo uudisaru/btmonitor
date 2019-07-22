@@ -1,6 +1,5 @@
 FROM sanicframework/sanic:LTS
 ARG host
-ENV server=$host
 
 RUN apk update \
     && apk add --no-cache openssl-dev libffi-dev
@@ -17,4 +16,4 @@ WORKDIR "/usr/src/app/"
 RUN cat req-extra.txt >> requirements.txt
 RUN rm req-extra.txt
 RUN pip3 install -r requirements.txt
-CMD ["sh", "-c", "python3 ./btmonitor/main.py server -p 443 -h $server"]
+CMD ["python3", "./btmonitor/main.py", "server", "-p", "443"]
