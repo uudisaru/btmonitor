@@ -78,4 +78,5 @@ alabaster
 # Project-specific folders
 frontend/
 docker/btmonitor.*
+docker/servername.txt
 docker/letsencrypt
