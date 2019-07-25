@@ -4,3 +4,4 @@ uvloop~=0.12.2
 msgpack~=0.6.1
 pyjwt~=1.7.1
 cryptography>=2.7,<3.0
+sanic-cors~=0.9.8
