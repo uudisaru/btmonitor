@@ -643,6 +643,29 @@ websockets = ">=6.0,<7.0"
 
 [[package]]
 category = "main"
+description = "A Sanic extension adding a decorator for CORS support. Based on flask-cors by Cory Dolphin."
+name = "sanic-cors"
+optional = false
+python-versions = "*"
+version = "0.9.8.post1"
+
+[package.dependencies]
+sanic = ">=0.8.3"
+sanic-plugins-framework = ">=0.7.0"
+
+[[package]]
+category = "main"
+description = "Doing all of the boilerplate to create a Sanic Plugin, so you don't have to."
+name = "sanic-plugins-framework"
+optional = false
+python-versions = "*"
+version = "0.7.0"
+
+[package.dependencies]
+sanic = ">=0.8.3"
+
+[[package]]
+category = "main"
 description = "Python 2 and 3 compatibility utilities"
 name = "six"
 optional = false
@@ -837,7 +860,7 @@ python-versions = ">=2.7"
 version = "0.5.2"
 
 [metadata]
-content-hash = "39661ff9ff06089964993f916c1952e1ca9ca3590e57e5b25d435a56a946d095"
+content-hash = "644125e52aa4518e78dc97eb854b954ad814beb46c4f3528d2aa7b6e9eab758b"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -907,6 +930,8 @@ requests-toolbelt = ["380606e1d10dc85c3bd47bf5a6095f815ec007be7a8b69c878507068df
 rfc3986 = ["0344d0bd428126ce554e7ca2b61787b6a28d2bbd19fc70ed2dd85efe31176405", "df4eba676077cefb86450c8f60121b9ae04b94f65f85b69f3f731af0516b7b18"]
 rstcheck = ["92c4f79256a54270e0402ba16a2f92d0b3c15c8f4410cb9c57127067c215741f"]
 sanic = ["22a46963af3bbab2a5e5e44625d01e253b319c9296e913c8292e8310dc8724ee", "7737773957447925a10ae4e66bfea40cb05319c2d916545c44e13b83f655f98e"]
+sanic-cors = ["f6452e47cd173f3c76d16655fa3e45e6f1fdf2950e29d5666e58367d57526e7f", "fbdcd6745bc4129c5c43468c1ff34ce09d3b518c727a20ab55a64bb434a632ae"]
+sanic-plugins-framework = ["59bcb23b46a7c03443570625f84e8f0d31c9869e32f871e680afbc68fc86887f", "5ad6f40b2a7dedb35a4760df55f4e05c90b6eca4b2f63c02b7b1c6a5f7da094a"]
 six = ["3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c", "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"]
 snowballstemmer = ["9f3b9ffe0809d174f7047e121431acf99c89a7040f0ca84f94ba53a498e6d0c9"]
 sphinx = ["9f3e17c64b34afc653d7c5ec95766e03043cc6d80b0de224f59b6b6e19d37c3c", "c7658aab75c920288a8cf6f09f244c6cfdae30d82d803ac1634d9f223a80ca08"]

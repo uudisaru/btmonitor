@@ -7,9 +7,10 @@ from btmonitor.poller.tallinn import parse_schedule
 from btmonitor.poller.tracker import Tracker
 from btmonitor.pubsub import Hub
 from btmonitor.pubsub import Subscription
+from btmonitor.user_registry import UserRegistry
 from pathlib import Path
-from sanic import response
-from sanic import Sanic
+from sanic import response, Sanic
+from sanic_cors import CORS
 from websockets import ConnectionClosed
 
 import asyncio
@@ -21,30 +22,14 @@ import msgpack
 logger = logging.getLogger(__name__)
 
 app = Sanic(__name__)
+CORS(app, automatic_options=True)
 hub = Hub(True)
-USERS = set()
-
-
-@app.route('/clients')
-@authorized(app.config)
-async def test(request):
-    return response.json({'clients': len(USERS)})
-
-
-def register(websocket):
-    USERS.add(websocket)
-    hub.resume()
-
-
-def unregister(websocket):
-    USERS.remove(websocket)
-    if len(USERS) == 0:
-        hub.suspend()
+registry = UserRegistry(hub)
 
 
 @app.websocket('/feed')
 async def feed(request, ws):
-    register(ws)
+    registry.add(ws)
     try:
         async for message in ws:
             logger.info('message received')
@@ -52,7 +37,19 @@ async def feed(request, ws):
         logger.info('Connection closed')
     finally:
         logger.info('Unregistering')
-        unregister(ws)
+        registry.remove(ws)
+
+
+@app.route('/clients')
+@authorized(app.config)
+async def clients(request):
+    return response.json({'clients': registry.user_count()})
+
+
+@app.route('/stats')
+@authorized(app.config)
+async def stats(request):
+    return response.json(registry.stats())
 
 
 async def poller(hub):
@@ -65,12 +62,12 @@ async def publisher(hub):
         while True:
             msg = await queue.get()
             encoded = msgpack.packb(msg)
-            for client in USERS:
+            for client in registry.users():
                 try:
                     await client.send(encoded)
                 except ConnectionClosed:
                     logger.info('Connection closed')
-                    unregister(client)
+                    registry.remove(client)
 
 
 @app.listener('after_server_start')
@@ -100,6 +97,12 @@ def init_ssl(host):
 
 def run(host, port, cert_name):
     ssl = init_ssl(cert_name)
-    app.static('/', './frontend/index.html')
-    app.static('/', './frontend')
+    frontend_dir = Path('./frontend')
+    if not frontend_dir.exists():
+        frontend_dir = Path('../frontend')
+    for fi in frontend_dir.iterdir():
+        app.static(
+            '/' + fi.name if fi.name != 'index.html' else '/',
+            fi.resolve().as_posix(),
+        )
     app.run(host=host, port=port, ssl=ssl)
