@@ -12,7 +12,7 @@ btmonitor
 
 
 
-Real-time bus traffic monitor. Includes scraper for monitoring bus traffing in Tallinn, Estonia.
+Real-time bus traffic monitor. Includes scraper for monitoring bus traffic in Tallinn, Estonia.
 
 
 * Free software: MIT license
