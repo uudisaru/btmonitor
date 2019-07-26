@@ -1,6 +1,7 @@
 from btmonitor.poller.tallinn import parse_schedule
 from btmonitor.poller.tracker import Tracker
 from btmonitor.pos_types import PositionUpdate
+from btmonitor.time_series import timestamp
 from typing import List
 
 
@@ -51,3 +52,19 @@ def test_update_no_id():
 
     tracker = Tracker(no_ids, '')
     assert tracker.update(LOCATIONS) is None
+
+
+def test_expiry():
+    tracker = Tracker(parse_schedule, '')
+    update = tracker.update(LOCATIONS)
+    now = timestamp()
+    assert 0 == len(tracker.expire(now - 60 * 1000))
+    assert len(update['positions']) == len(tracker.expire(now + 60 * 1000))
+    assert len(tracker.tracks) == 0
+
+
+def test_get_tracks():
+    tracker = Tracker(parse_schedule, '')
+    update = tracker.update(LOCATIONS)
+    tracks = tracker.get_tracks()
+    assert update['positions'] == tracks['positions']

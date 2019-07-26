@@ -7,9 +7,11 @@ from btmonitor.poller.tallinn import parse_schedule
 from btmonitor.poller.tracker import Tracker
 from btmonitor.pubsub import Hub
 from btmonitor.pubsub import Subscription
+from btmonitor.time_series import timestamp
 from btmonitor.user_registry import UserRegistry
 from pathlib import Path
-from sanic import response, Sanic
+from sanic import response
+from sanic import Sanic
 from sanic_cors import CORS
 from websockets import ConnectionClosed
 
@@ -25,10 +27,13 @@ app = Sanic(__name__)
 CORS(app, automatic_options=True)
 hub = Hub(True)
 registry = UserRegistry(hub)
+tracker = Tracker(parse_schedule, 'TLN')
 
 
 @app.websocket('/feed')
 async def feed(request, ws):
+    tracks = msgpack.packb(tracker.get_tracks())
+    await ws.send(tracks)
     registry.add(ws)
     try:
         async for message in ws:
@@ -52,8 +57,25 @@ async def stats(request):
     return response.json(registry.stats())
 
 
+@app.route('/tracks')
+@authorized(app.config)
+async def tracks(request):
+    return response.json(tracker.stats())
+
+
+async def expire_tracks(hub):
+    expiry_interval = 15 * 60 * 1000
+    while True:
+        now = timestamp()
+        expired = tracker.expire(now - expiry_interval)
+        if expired:
+            hub.publish(
+                {'type': 'EXP', 'area': tracker.area, 'expired': expired}
+            )
+        await asyncio.sleep(60)
+
+
 async def poller(hub):
-    tracker = Tracker(parse_schedule, 'TLN')
     await poll_positions(tracker, hub)
 
 
@@ -72,6 +94,7 @@ async def publisher(hub):
 
 @app.listener('after_server_start')
 async def after_server_start(app, loop):
+    app.add_task(expire_tracks(hub))
     app.add_task(poller(hub))
     app.add_task(publisher(hub))
 
@@ -79,7 +102,7 @@ async def after_server_start(app, loop):
 @app.listener('before_server_stop')
 async def before_server_stop(app, loop):
     """Clean up tasks which are not stopped automatically"""
-    tasks_to_cancel = {'poller', 'publisher'}
+    tasks_to_cancel = {'expire_tracks', 'poller', 'publisher'}
     for task in asyncio.all_tasks(loop):
         frames = task.get_stack(limit=1)
         tb = inspect.getframeinfo(frames[0])
