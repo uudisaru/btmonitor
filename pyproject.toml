@@ -24,7 +24,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.7"
 # List project dependencies here
-aiohttp = "^3.5"
+aiohttp = "^3.8"
 click = "^7.0"
 uvloop = "^0.12.2"
 sanic = "^19.6"
