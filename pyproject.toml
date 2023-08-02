@@ -30,7 +30,7 @@ uvloop = "^0.12.2"
 sanic = "^19.6"
 msgpack = "^0.6.1"
 pyjwt = "^1.7"
-cryptography = "^2.7"
+cryptography = "^41.0"
 sanic-cors = "^0.9.8"
 
 [tool.poetry.dev-dependencies]
